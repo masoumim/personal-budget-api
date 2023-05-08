@@ -78,6 +78,19 @@ userRouter.post('/', (req, res, next) => {
     }
 });
 
+// PUT routes
+userRouter.put('/:userId', (req, res, next) => {
+    // Edit user object
+    // Check if the body's ID matches the URL param ID
+    if (req.body.id === Number(req.params.userId)) {
+        users[req.userIndex] = req.body;
+        res.status(200).send(users[req.userIndex]);
+    }
+    else {
+        res.status(409).send();
+    }
+});
+
 
 // Export userRouter
 module.exports = userRouter;
