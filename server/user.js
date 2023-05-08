@@ -1,6 +1,9 @@
 // Require in express module
 const express = require('express');
 
+// Require in the utilities module
+const utils = require('../utils/utils.js');
+
 // Users array
 const users = [
     {id: 1, userName: "Default user"}
@@ -13,16 +16,66 @@ const userRouter = express.Router();
 // Nest the budgetRouter in to the userRouter.
 // This tells Express that the path to budgetRouter is the same as userRouter,
 // but with the the additional path '/:userId/budgets'.
-// This now allows for a new route like: /users/1/budgets.
+// This now allows for a new route like: '/users/1/budgets'
 // The result is that accessing the route: '/:userId/budgets',
 // will trigger the budgetRouter.get('/') route.
 const budgetRouter = require('./budget.js');
 userRouter.use('/:userId/budgets', budgetRouter);  
 
+// Intercept any request to a route handler with the :userId parameter,
+// and check if the userId is valid or not.
+userRouter.param('userId', (req, res, next, id) => {
+    
+    let userId = Number(id);
+
+    // Check if a user object with this ID already exists
+    const userIndex = users.findIndex((element) => {
+        return element.id === userId;
+    });
+
+    if (userIndex === -1) {
+        res.status(404).send('That user does not exist');
+    }
+    else {
+        // creates a 'userIndex' on the request parameter and sets it's value.
+        req.userIndex = userIndex;
+        next();
+    }
+});
+
+
 // GET routes
 userRouter.get('/', (req, res, next) => {
     // Return ALL users
     res.status(200).send(users);
+});
+
+userRouter.get('/:userId', (req, res, next) => {
+    res.status(200).send(users[req.userIndex]);
+});
+
+// POST routes
+userRouter.post('/', (req, res, next) => {
+    // Check if the request body contains a userName
+    if (req.body.userName) {
+        // Generate new ID
+        const newUserId = utils.generateId(users);
+
+        // Create new User object using req.body
+        const newUser = req.body;
+
+        // Set the ID of the new user
+        newUser.id = newUserId;
+
+        // Add the user object to the users array
+        users.push(newUser);
+
+        // Send back response along with new user object
+        res.status(201).send(newUser);
+    }
+    else {
+        res.status(409).send();
+    }
 });
 
 
