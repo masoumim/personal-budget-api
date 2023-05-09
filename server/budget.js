@@ -67,8 +67,8 @@ budgetRouter.get('/:budgetId', (req, res, next) => {
 
 // POST routes
 budgetRouter.post('/', (req, res, next) => {
-    // Check if the request body contains a budget name
-    if (req.body.name) {
+    // Check if the request body contains a userId
+    if (req.body.userId) {
         // Generate new ID
         const newBudgetId = utils.generateId(budgets);
 
@@ -85,10 +85,29 @@ budgetRouter.post('/', (req, res, next) => {
         res.status(201).send(newBudget);
     }
     else {
-        res.status(409).send("Budget must have a name");
+        res.status(409).send("Budget must belong to a user");
     }
 });
 
+// PUT routes
+budgetRouter.put('/:budgetId', (req, res, next) => {
+    // Edit budget object
+    // Check if the body's ID matches the URL param ID
+    if (req.body.id === Number(req.params.budgetId)) {
+        budgets[req.budgetIndex] = req.body;
+        res.status(200).send(budgets[req.budgetIndex]);
+    }
+    else {
+        res.status(409).send();
+    }
+});
+
+// DELTE routes
+budgetRouter.delete('/:budgetId', (req, res, next) => {
+    // Delete budget obj
+    budgets.splice(req.budgetIndex, 1);
+    res.status(200).send();
+});
 
 // Export budgetRouter
 module.exports = budgetRouter;
