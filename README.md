@@ -10,6 +10,9 @@ Once installed, type 'node app.js' in the NodeJS terminal to start the server wh
 This project does not utilize a client or front-end. 
 To interact with the API use Postman (https://www.postman.com/) to make requests.
 
+User data has the following format: {id: 1, userName: "Name of User"}
+Budget data has the following format: {id: 1, name: "Bank Loan", balance: 100, userId: 2}
+
 Endpoints:
 ==========
 
