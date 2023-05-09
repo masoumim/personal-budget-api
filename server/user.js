@@ -17,8 +17,8 @@ const userRouter = express.Router();
 // This tells Express that the path to budgetRouter is the same as userRouter,
 // but with the the additional path '/:userId/budgets'.
 // This now allows for a new route like: '/users/1/budgets'
-// The result is that accessing the route: '/:userId/budgets',
-// will trigger the budgetRouter.get('/') route.
+// The result is that accessing the route: 'api/users/:userId/budgets',
+// will trigger the budgetRouter's HTTP route handlers.
 const budgetRouter = require('./budget.js');
 userRouter.use('/:userId/budgets', budgetRouter);  
 
