@@ -91,6 +91,15 @@ userRouter.put('/:userId', (req, res, next) => {
     }
 });
 
+// DELTE routes
+userRouter.delete('/:userId', (req, res, next) => {
+    // Delete user obj
+    users.splice(req.basketIndex, 1);
+    res.status(200).send();
+
+    // TODO: Add method that will delete budget objects belonging to this user.
+});
+
 
 // Export userRouter
 module.exports = userRouter;
