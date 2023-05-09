@@ -6,7 +6,8 @@ const utils = require('../utils/utils.js');
 
 // Budgets array
 const budgets = [
-    {id: 1, name: "Groceries", balance: 100, userId: 1}
+    {id: 1, name: "Groceries", balance: 100, userId: 1},
+    {id: 2, name: "Car Payment", balance: 100, userId: 1}
 ];
 
 // Create budgetRouter
@@ -86,6 +87,31 @@ budgetRouter.post('/', (req, res, next) => {
     }
     else {
         res.status(409).send("Budget must belong to user");
+    }
+});
+
+// POST - transfer money between budgets
+budgetRouter.post('/transfer/:from/:to', (req, res, next) => {
+
+    // Check for userId in the URI
+    if (req.params.userId) {
+        // Deduct the amount from a budget if there is enough to deduct
+        if (budgets[Number(req.params.from) - 1].balance >= Number(req.params.from)) {
+
+            // Deduct from budget
+            budgets[Number(req.params.from) - 1].balance -= Number(req.headers.amount);
+
+            // Add the amount to other budget
+            budgets[Number(req.params.to) - 1].balance += Number(req.headers.amount);
+
+            res.status(200).send();
+        }
+        else {
+            res.status(409).send(`Not enough money in ${budgets[Number(req.params.from) - 1].name} budget`);
+        }
+    }
+    else {
+        res.status(409).send("Only users can transfer money between budgets");
     }
 });
 
