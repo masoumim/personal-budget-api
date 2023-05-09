@@ -74,7 +74,7 @@ userRouter.post('/', (req, res, next) => {
         res.status(201).send(newUser);
     }
     else {
-        res.status(409).send();
+        res.status(409).send("User must have a name");
     }
 });
 
