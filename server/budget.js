@@ -5,9 +5,13 @@ const express = require('express');
 const utils = require('../utils/utils.js');
 
 // Budgets array
-const budgets = [
+let budgets = [
     {id: 1, name: "Groceries", balance: 100, userId: 1},
-    {id: 2, name: "Car Payment", balance: 100, userId: 1}
+    {id: 2, name: "Car Payment", balance: 100, userId: 1},
+    {id: 3, name: "Cellphone", balance: 80, userId: 1},
+    {id: 4, name: "Entertainment", balance: 100, userId: 1},
+    {id: 5, name: "Fast Food", balance: 100, userId: 2},
+    {id: 6, name: "Bank Loan", balance: 100, userId: 2}
 ];
 
 // Create budgetRouter
@@ -135,5 +139,11 @@ budgetRouter.delete('/:budgetId', (req, res, next) => {
     res.status(200).send();
 });
 
+// Deletes budgets belonging to user
+function deleteBudgets(userId){    
+    budgets = budgets.filter((element) => element.userId !== Number(userId));
+}
+
 // Export budgetRouter
-module.exports = budgetRouter;
+module.exports = {budgetRouter, deleteBudgets};
+

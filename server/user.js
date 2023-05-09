@@ -4,9 +4,13 @@ const express = require('express');
 // Require in the utilities module
 const utils = require('../utils/utils.js');
 
+// Require in the budget module (used for deleting budgets that belong to a given user)
+const budgetModule = require('./budget.js');
+
 // Users array
 const users = [
-    {id: 1, userName: "Default user"}
+    {id: 1, userName: "Default user"},
+    {id: 2, userName: "Default user 2"}
 ];
 
 // Create userRouter
@@ -19,8 +23,8 @@ const userRouter = express.Router();
 // This now allows for a new route like: '/users/1/budgets'
 // The result is that accessing the route: 'api/users/:userId/budgets',
 // will trigger the budgetRouter's HTTP route handlers.
-const budgetRouter = require('./budget.js');
-userRouter.use('/:userId/budgets', budgetRouter);  
+// const budgetRouter = require('./budget.js');
+userRouter.use('/:userId/budgets', budgetModule.budgetRouter);
 
 // Intercept any request to a route handler with the :userId parameter,
 // and check if the userId is valid or not.
@@ -93,13 +97,13 @@ userRouter.put('/:userId', (req, res, next) => {
 
 // DELTE routes
 userRouter.delete('/:userId', (req, res, next) => {
+    // Delete budget objects belonging to this user.
+    budgetModule.deleteBudgets(req.params.userId);
+    
     // Delete user obj
-    users.splice(req.basketIndex, 1);
+    users.splice(req.userIndex, 1);
     res.status(200).send();
-
-    // TODO: Add method that will delete budget objects belonging to this user.
 });
-
 
 // Export userRouter
 module.exports = userRouter;
